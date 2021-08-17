@@ -1,0 +1,247 @@
+{
+  "fields": [
+    {
+      "name": "CLIENT",
+      "type": "string"
+    },
+    {
+      "name": "KUNNR",
+      "type": "string"
+    },
+    {
+      "name": "VKORG",
+      "type": "string"
+    },
+    {
+      "name": "VTWEG",
+      "type": "string"
+    },
+    {
+      "name": "SPART",
+      "type": "string"
+    },
+    {
+      "name": "MATNR",
+      "type": "string"
+    },
+    {
+      "name": "PRICE_TYPE",
+      "type": "string"
+    },
+    {
+      "name": "KSCHL",
+      "type": "string"
+    },
+    {
+      "logicalType": "decimal",
+      "name": "KBETR",
+      "type": "bytes"
+    },
+    {
+      "name": "WAERS",
+      "type": "string"
+    },
+    {
+      "name": "ZSLTDATE",
+      "type": "string"
+    },
+    {
+      "name": "ZSLTTIME",
+      "type": "string"
+    },
+    {
+      "logicalType": "decimal",
+      "name": "KPEIN",
+      "type": "bytes"
+    },
+    {
+      "name": "KMEIN",
+      "type": "string"
+    },
+    {
+      "name": "PCNUM",
+      "type": "string"
+    },
+    {
+      "name": "PC_PX_VALID_FROM",
+      "type": "string"
+    },
+    {
+      "name": "PC_PX_VALID_TO",
+      "type": "string"
+    },
+    {
+      "logicalType": "decimal",
+      "name": "AMOUNT_1",
+      "type": "bytes"
+    },
+    {
+      "logicalType": "decimal",
+      "name": "AMOUNT_2",
+      "type": "bytes"
+    },
+    {
+      "logicalType": "decimal",
+      "name": "AMOUNT_3",
+      "type": "bytes"
+    },
+    {
+      "logicalType": "decimal",
+      "name": "AMOUNT_4",
+      "type": "bytes"
+    },
+    {
+      "logicalType": "decimal",
+      "name": "AMOUNT_5",
+      "type": "bytes"
+    },
+    {
+      "logicalType": "decimal",
+      "name": "AMOUNT_6",
+      "type": "bytes"
+    },
+    {
+      "logicalType": "decimal",
+      "name": "AMOUNT_7",
+      "type": "bytes"
+    },
+    {
+      "logicalType": "decimal",
+      "name": "AMOUNT_8",
+      "type": "bytes"
+    },
+    {
+      "logicalType": "decimal",
+      "name": "AMOUNT_9",
+      "type": "bytes"
+    },
+    {
+      "logicalType": "decimal",
+      "name": "AMOUNT_10",
+      "type": "bytes"
+    },
+    {
+      "logicalType": "decimal",
+      "name": "AMOUNT_KPEIN",
+      "type": "bytes"
+    },
+    {
+      "name": "AMOUNT_KMEIN",
+      "optional": false,
+      "type": "string"
+    },
+    {
+      "name": "AMOUNT_WAERS",
+      "optional": false,
+      "type": "string"
+    },
+    {
+      "name": "CREATED_ON",
+      "optional": false,
+      "type": "string"
+    },
+    {
+      "name": "CREATED_BY",
+      "optional": false,
+      "type": "string"
+    },
+    {
+      "name": "CREATE_TIME",
+      "optional": false,
+      "type": "string"
+    },
+    {
+      "name": "CHANGED_ON",
+      "optional": false,
+      "type": "string"
+    },
+    {
+      "name": "CHANGED_BY",
+      "optional": false,
+      "type": "string"
+    },
+    {
+      "name": "CHANGE_TIME",
+      "optional": false,
+      "type": "string"
+    },
+    {
+      "name": "PRICE_EFF_DATE",
+      "optional": false,
+      "type": "string"
+    },
+    {
+      "name": "PRICE_EFF_TIME",
+      "optional": false,
+      "type": "string"
+    },
+    {
+      "name": "ZZ_PRICING_BO",
+      "optional": false,
+      "type": "string"
+    },
+    {
+      "logicalType": "decimal",
+      "name": "AMOUNT_11",
+      "type": "bytes"
+    },
+    {
+      "logicalType": "decimal",
+      "name": "AMOUNT_12",
+      "type": "bytes"
+    },
+    {
+      "logicalType": "decimal",
+      "name": "AMOUNT_13",
+      "type": "bytes"
+    },
+    {
+      "logicalType": "decimal",
+      "name": "AMOUNT_14",
+      "type": "bytes"
+    },
+    {
+      "logicalType": "decimal",
+      "name": "AMOUNT_15",
+      "type": "bytes"
+    },
+    {
+      "logicalType": "decimal",
+      "name": "AMOUNT_16",
+      "type": "bytes"
+    },
+    {
+      "logicalType": "decimal",
+      "name": "AMOUNT_17",
+      "type": "bytes"
+    },
+    {
+      "logicalType": "decimal",
+      "name": "AMOUNT_18",
+      "type": "bytes"
+    },
+    {
+      "logicalType": "decimal",
+      "name": "AMOUNT_19",
+      "type": "bytes"
+    },
+    {
+      "logicalType": "decimal",
+      "name": "AMOUNT_20",
+      "type": "bytes"
+    },
+    {
+      "name": "ZSLTTMSTP",
+      "optional": false,
+      "type": "string"
+    },
+    {
+      "name": "ZSLTTASK",
+      "optional": false,
+      "type": "string"
+    }
+  ],
+  "name": "pricing",
+  "namespace": "io.ab.developer.avro",
+  "type": "record"
+}
