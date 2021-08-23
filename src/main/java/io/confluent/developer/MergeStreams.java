@@ -8,6 +8,9 @@ import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.kstream.KStream;
+import org.apache.kafka.clients.CommonClientConfigs;
+import org.apache.kafka.common.config.SslConfigs;
+import org.apache.kafka.common.config.SaslConfigs;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -84,13 +87,12 @@ public class MergeStreams {
         allProps.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
         allProps.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, SpecificAvroSerde.class);
         allProps.put(SCHEMA_REGISTRY_URL_CONFIG, allProps.getProperty("schema.registry.url"));
-        allProps.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, security.protocol.config);
-        allProps.put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG,ssl.truststore.location.config);
-        allProps.put(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, ssl.truststore.password.config);
-        allProps.put(SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG, ssl.keystore.location.config);
-        allProps.put(SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG,ssl.keystore.password.config);
-        allProps.put(SslConfigs.SSL_KEY_PASSWORD_CONFIG, ssl.key.password.config);
-
+        allProps.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, allProps.getProperty("security.protocol.config"));
+        allProps.put(SaslConfigs.DEFAULT_SASL_MECHANISM, allProps.getProperty("sasl.mechanism.config"));
+        allProps.put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG,allProps.getProperty("ssl.truststore.location.config"));
+        allProps.put(SaslConfigs.SASL_JAAS_CONFIG,allProps.getProperty("sasl.jaas.config"));
+        allProps.put(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, allProps.getProperty("ssl.truststore.password.config"));
+        
         Topology topology = ms.buildTopology(allProps);
 
         //ms.createTopics(allProps);
