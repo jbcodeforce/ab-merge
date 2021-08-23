@@ -84,9 +84,16 @@ public class MergeStreams {
         allProps.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
         allProps.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, SpecificAvroSerde.class);
         allProps.put(SCHEMA_REGISTRY_URL_CONFIG, allProps.getProperty("schema.registry.url"));
+        allProps.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, security.protocol.config);
+        allProps.put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG,ssl.truststore.location.config);
+        allProps.put(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, ssl.truststore.password.config);
+        allProps.put(SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG, ssl.keystore.location.config);
+        allProps.put(SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG,ssl.keystore.password.config);
+        allProps.put(SslConfigs.SSL_KEY_PASSWORD_CONFIG, ssl.key.password.config);
+
         Topology topology = ms.buildTopology(allProps);
 
-        ms.createTopics(allProps);
+        //ms.createTopics(allProps);
 
         final KafkaStreams streams = new KafkaStreams(topology, allProps);
         final CountDownLatch latch = new CountDownLatch(1);
