@@ -88,7 +88,7 @@ public class MergeStreams {
         allProps.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, SpecificAvroSerde.class);
         allProps.put(SCHEMA_REGISTRY_URL_CONFIG, allProps.getProperty("schema.registry.url"));
         allProps.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, allProps.getProperty("security.protocol.config"));
-        allProps.put(SaslConfigs.DEFAULT_SASL_MECHANISM, allProps.getProperty("sasl.mechanism.config"));
+        allProps.put(SaslConfigs.SASL_MECHANISM, allProps.getProperty("sasl.mechanism.config"));
         allProps.put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG,allProps.getProperty("ssl.truststore.location.config"));
         allProps.put(SaslConfigs.SASL_JAAS_CONFIG,allProps.getProperty("sasl.jaas.config"));
         allProps.put(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, allProps.getProperty("ssl.truststore.password.config"));
