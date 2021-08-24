@@ -24,8 +24,12 @@ import java.util.concurrent.CountDownLatch;
 
 import io.ab.developer.avro.pricing;
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
+import org.apache.kafka.common.serialization.Serde;
+import org.apache.kafka.common.serialization.Serdes;
+import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
+import org.apache.kafka.streams.kstream.Produced;
+import java.util.Collections;
 
-import static io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG;
 
 public class MergeStreams {
     public static final String SCHEMA_REGISTRY_SSL_TRUSTSTORE_LOCATION = "schema.registry.ssl.truststore.location"; 
@@ -36,37 +40,22 @@ public class MergeStreams {
         final String pricingTopic = allProps.getProperty("input.pricing.topic.name");
         final String pricingDeleteTopic = allProps.getProperty("input.pricingDelete.topic.name");
         final String allPricingTopic = allProps.getProperty("output.topic.name");
+        // add specific schemas
+        final Serde<String> stringSerde = Serdes.String();
+        final Serde<pricing> specificAvroSerde = new SpecificAvroSerde<>();
+        final boolean isKeySerde = false;
+        specificAvroSerde.configure(
+            Collections.singletonMap(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, allProps.getProperty("schema.registry.url")),
+            isKeySerde);
+        final KStream<String, pricing> pricingMessage = builder.stream(pricingTopic);
+        final KStream<String, pricing> pricingDeleteMessage = builder.stream(pricingDeleteTopic);
+        final KStream<String, pricing> allPricingMessage = pricingMessage.merge(pricingDeleteMessage);
+        final KafkaStreams streams = new KafkaStreams(builder.build(), allProps);
 
-        KStream<String, pricing> pricingMessage = builder.stream(pricingTopic);
-        KStream<String, pricing> pricingDeleteMessage = builder.stream(pricingDeleteTopic);
-        KStream<String, pricing> allPricingMessage = pricingMessage.merge(pricingDeleteMessage);
-
-        allPricingMessage.to(allPricingTopic);
+// end of avro schemas
+       
+        allPricingMessage.to(allPricingTopic,Produced.with(stringSerde, specificAvroSerde));
         return builder.build();
-    }
-
-    public void createTopics(Properties allProps) {
-        AdminClient client = AdminClient.create(allProps);
-
-        List<NewTopic> topics = new ArrayList<>();
-
-        topics.add(new NewTopic(
-                allProps.getProperty("input.pricing.topic.name"),
-                Integer.parseInt(allProps.getProperty("input.pricing.topic.partitions")),
-                Short.parseShort(allProps.getProperty("input.pricing.topic.replication.factor"))));
-
-        topics.add(new NewTopic(
-                allProps.getProperty("input.pricingDelete.topic.name"),
-                Integer.parseInt(allProps.getProperty("input.pricingDelete.topic.partitions")),
-                Short.parseShort(allProps.getProperty("input.pricingDelete.topic.replication.factor"))));
-
-        topics.add(new NewTopic(
-                allProps.getProperty("output.topic.name"),
-                Integer.parseInt(allProps.getProperty("output.topic.partitions")),
-                Short.parseShort(allProps.getProperty("output.topic.replication.factor"))));
-
-        client.createTopics(topics);
-        client.close();
     }
 
     public Properties loadEnvProperties(String fileName) throws IOException {
@@ -87,7 +76,7 @@ public class MergeStreams {
         Properties allProps = ms.loadEnvProperties(args[0]);
         allProps.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
         allProps.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, SpecificAvroSerde.class);
-        allProps.put(SCHEMA_REGISTRY_URL_CONFIG, allProps.getProperty("schema.registry.url"));
+        allProps.put(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, allProps.getProperty("schema.registry.url"));
         allProps.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, allProps.getProperty("security.protocol.config"));
         allProps.put(SaslConfigs.SASL_MECHANISM, allProps.getProperty("sasl.mechanism.config"));
         allProps.put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG,allProps.getProperty("ssl.truststore.location.config"));
@@ -100,8 +89,7 @@ public class MergeStreams {
 
         Topology topology = ms.buildTopology(allProps);
 
-        //ms.createTopics(allProps);
-
+        
         final KafkaStreams streams = new KafkaStreams(topology, allProps);
         final CountDownLatch latch = new CountDownLatch(1);
 
