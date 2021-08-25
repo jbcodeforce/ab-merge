@@ -23,11 +23,14 @@ import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 
 import io.ab.developer.avro.pricing;
-import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
 import org.apache.kafka.streams.kstream.Produced;
+import io.confluent.kafka.streams.serdes.avro.GenericAvroSerde;
+import org.apache.avro.Schema;
+import org.apache.avro.generic.GenericData;
+import org.apache.avro.generic.GenericRecord;
 import java.util.Collections;
 
 
@@ -42,19 +45,20 @@ public class MergeStreams {
         final String allPricingTopic = allProps.getProperty("output.topic.name");
         // add specific schemas
         final Serde<String> stringSerde = Serdes.String();
-        final Serde<pricing> specificAvroSerde = new SpecificAvroSerde<>();
+        //final Serde<pricing> specificAvroSerde = new SpecificAvroSerde<>();
+        final Serde<GenericRecord> genericAvroSerde = new GenericAvroSerde();
         final boolean isKeySerde = false;
-        specificAvroSerde.configure(
+        genericAvroSerde.configure(
             Collections.singletonMap(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, allProps.getProperty("schema.registry.url")),
             isKeySerde);
-        final KStream<String, pricing> pricingMessage = builder.stream(pricingTopic);
-        final KStream<String, pricing> pricingDeleteMessage = builder.stream(pricingDeleteTopic);
-        final KStream<String, pricing> allPricingMessage = pricingMessage.merge(pricingDeleteMessage);
+        final KStream<String, GenericRecord> pricingMessage = builder.stream(pricingTopic);
+        final KStream<String, GenericRecord> pricingDeleteMessage = builder.stream(pricingDeleteTopic);
+        final KStream<String, GenericRecord> allPricingMessage = pricingMessage.merge(pricingDeleteMessage);
         final KafkaStreams streams = new KafkaStreams(builder.build(), allProps);
 
 // end of avro schemas
        
-        allPricingMessage.to(allPricingTopic,Produced.with(stringSerde, specificAvroSerde));
+        allPricingMessage.to(allPricingTopic,Produced.with(stringSerde, genericAvroSerde));
         return builder.build();
     }
 
@@ -75,7 +79,7 @@ public class MergeStreams {
         MergeStreams ms = new MergeStreams();
         Properties allProps = ms.loadEnvProperties(args[0]);
         allProps.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
-        allProps.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, SpecificAvroSerde.class);
+        allProps.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, GenericAvroSerde.class);
         allProps.put(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, allProps.getProperty("schema.registry.url"));
         allProps.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, allProps.getProperty("security.protocol.config"));
         allProps.put(SaslConfigs.SASL_MECHANISM, allProps.getProperty("sasl.mechanism.config"));
