@@ -37,6 +37,9 @@ import java.util.Collections;
 public class MergeStreams {
     public static final String SCHEMA_REGISTRY_SSL_TRUSTSTORE_LOCATION = "schema.registry.ssl.truststore.location"; 
     public static final String SCHEMA_REGISTRY_SSL_TRUSTSTORE_PASSWORD = "schema.registry.ssl.truststore.password"; 
+    public static final String SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO = "schema.registry.basic.auth.user.info";
+
+
     public Topology buildTopology(Properties allProps) {
         final StreamsBuilder builder = new StreamsBuilder();
 
@@ -92,6 +95,11 @@ public class MergeStreams {
 
         allProps.put(SCHEMA_REGISTRY_SSL_TRUSTSTORE_LOCATION, allProps.getProperty("schema.registry.ssl.truststore.location"));
         allProps.put(SCHEMA_REGISTRY_SSL_TRUSTSTORE_PASSWORD, allProps.getProperty("schema.registry.ssl.truststore.password"));
+        // for RBAC
+        allProps.put(AbstractKafkaSchemaSerDeConfig.BASIC_AUTH_CREDENTIALS_SOURCE, "USER_INFO");
+        allProps.put(SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO, allProps.getProperty("schema.registry.user.info"));
+        
+
 
 
         Topology topology = ms.buildTopology(allProps);
