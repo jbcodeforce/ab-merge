@@ -89,12 +89,17 @@ public class MergeStreams {
         allProps.put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG,allProps.getProperty("ssl.truststore.location.config"));
         allProps.put(SaslConfigs.SASL_JAAS_CONFIG,allProps.getProperty("sasl.jaas.config"));
         allProps.put(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, allProps.getProperty("ssl.truststore.password.config"));
-        allProps.put(SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG, allProps.getProperty("ssl.keystore.location.config"));
-        allProps.put(SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG, allProps.getProperty("ssl.keystore.password.config"));
+        if (allProps.getProperty("security.protocol.config").equals("SSL")) {
+            allProps.put(SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG, allProps.getProperty("ssl.keystore.location.config"));
+            allProps.put(SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG, allProps.getProperty("ssl.keystore.password.config"));    
+        }
+        if (! allProps.getProperty("security.protocol.config").equals("PLAIN")) {
         //allProps.put(SslConfigs.SSL_KEY_PASSWORD_CONFIG, allProps.getProperty("ssl.key.location.config"));
 
-        allProps.put(SCHEMA_REGISTRY_SSL_TRUSTSTORE_LOCATION, allProps.getProperty("schema.registry.ssl.truststore.location"));
-        allProps.put(SCHEMA_REGISTRY_SSL_TRUSTSTORE_PASSWORD, allProps.getProperty("schema.registry.ssl.truststore.password"));
+            allProps.put(SCHEMA_REGISTRY_SSL_TRUSTSTORE_LOCATION, allProps.getProperty("schema.registry.ssl.truststore.location"));
+            allProps.put(SCHEMA_REGISTRY_SSL_TRUSTSTORE_PASSWORD, allProps.getProperty("schema.registry.ssl.truststore.password"));
+            allProps.put("schema.registry.ssl.truststore.type", allProps.getProperty("schema.registry.ssl.truststore.type"));
+        }
         // for RBAC
         allProps.put(AbstractKafkaSchemaSerDeConfig.BASIC_AUTH_CREDENTIALS_SOURCE, "USER_INFO");
         allProps.put(SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO, allProps.getProperty("schema.registry.user.info"));
